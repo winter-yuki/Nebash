@@ -13,3 +13,9 @@ $ ./gradlew :run
 ----
 $ ./gradlew :test
 ----
+
+.Generate docs
+[source,bash]
+----
+$ ./gradlew :dokkaHtml
+----
