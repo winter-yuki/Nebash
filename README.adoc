@@ -1,1 +1,15 @@
 = Nebash
+
+== Getting started
+
+.Run app
+[source,bash]
+----
+$ ./gradlew :run
+----
+
+.Run tests
+[source,bash]
+----
+$ ./gradlew :test
+----
