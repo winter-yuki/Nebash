@@ -1,3 +1,5 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
 plugins {
     kotlin("jvm") version "1.6.10"
     id("io.gitlab.arturbosch.detekt") version "1.19.0"
@@ -26,6 +28,7 @@ tasks.withType<JavaExec>().all {
 }
 
 tasks.withType<Test> {
+    dependsOn("detekt")
     useJUnitPlatform()
     testLogging {
         events("passed", "skipped", "failed")
@@ -33,12 +36,12 @@ tasks.withType<Test> {
 }
 
 detekt {
-    buildUponDefaultConfig = true // preconfigure defaults
-    allRules = false // activate all available (even unstable) rules.
-    config = files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
+    buildUponDefaultConfig = true
+    allRules = false // Activates all, even unstable rules
+    config = files("$projectDir/config/detekt.yml")
 }
 
-tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+tasks.withType<Detekt>().configureEach {
     reports {
         xml.required.set(true)
         html.required.set(true)

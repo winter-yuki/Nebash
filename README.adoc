@@ -19,3 +19,9 @@ $ ./gradlew :test
 ----
 $ ./gradlew :dokkaHtml
 ----
+
+.Run static analysis
+[source,bash]
+----
+$ ./gradlew :detekt
+----
