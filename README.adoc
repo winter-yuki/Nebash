@@ -25,3 +25,9 @@ $ ./gradlew :dokkaHtml
 ----
 $ ./gradlew :detekt
 ----
+
+.Check before commit
+[source,bash]
+----
+$ ./gradlew :check
+----
