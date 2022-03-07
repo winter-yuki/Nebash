@@ -1,8 +1,42 @@
 package ru.itmo.sd.nebash
 
-/**
- * The super main function.
- */
-fun main() {
-    println("Hello world!")
+import ru.itmo.sd.nebash.frontend.raw.RawStmt
+import ru.itmo.sd.nebash.frontend.raw.RawStmtBuilder
+
+private fun main() {
+    val interpreter = Nebash()
+    while (true) {
+        try {
+            val stmt = when (val res = readStmt()) {
+                is ReadStmt.Ok -> res.stmt
+                is ReadStmt.Empty -> continue
+                is ReadStmt.End -> break
+            }
+            interpreter.execute(stmt)
+        } catch (e: RuntimeException) {
+            // TODO
+        }
+    }
+}
+
+private sealed interface ReadStmt {
+    class Ok(val stmt: RawStmt) : ReadStmt
+    object Empty : ReadStmt
+    object End : ReadStmt
+}
+
+private fun readStmt(prompt: String = "$ ", continuePrompt: String = "> "): ReadStmt {
+    print(prompt)
+    val builder = RawStmtBuilder()
+    while (true) {
+        val line = readlnOrNull() ?: return ReadStmt.End
+        if (line.isBlank()) return ReadStmt.Empty
+        builder.append(line)
+        val stmt = builder.buildOrNull()
+        if (stmt == null) {
+            print(continuePrompt)
+            continue
+        }
+        return ReadStmt.Ok(stmt)
+    }
 }

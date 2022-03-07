@@ -16,19 +16,21 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
-
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+    implementation("org.slf4j:slf4j-simple:1.7.36")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.1.21")
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.19.0")
 
+    testImplementation(kotlin("test"))
     testImplementation(platform("org.junit:junit-bom:5.8.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-tasks.withType<JavaExec>().all {
+application {
     mainClass.set("ru.itmo.sd.nebash.MainKt")
 }
 
 tasks.withType<Test> {
-    dependsOn("detekt")
     useJUnitPlatform()
     testLogging {
         events("passed", "skipped", "failed")
