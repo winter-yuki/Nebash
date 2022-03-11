@@ -6,9 +6,12 @@ import ru.itmo.sd.nebash.frontend.raw.RawStmt
 
 // TODO
 fun RawStmt.toStmt(env: Env): Stmt =
-    Stmt(
-        assignmentList = listOf(Assignment("a".vn, "1".vv)),
-        pipeline = listOf(PipelineAtom("pwd".cn, listOf())),
+    Pipeline(
+        localAssignments = listOf(Assignment("a".vn, "1".vv)),
+        pipeline = listOf(
+            PipelineAtom("cat".cn, listOf()),
+            PipelineAtom("wc".cn, listOf())
+        ),
         stdin = null,
         stdout = null,
         stderr = null

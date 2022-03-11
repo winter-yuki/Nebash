@@ -7,7 +7,7 @@ import ru.itmo.sd.nebash.Env
 interface Command {
     operator fun invoke(
         env: Env, args: List<CommandArg>,
-        stdin: Flow<String>, stderr: MutableSharedFlow<String>
+        stdin: Flow<String?>, stderr: MutableSharedFlow<String>
     ): Flow<String>
 }
 
