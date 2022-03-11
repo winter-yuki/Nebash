@@ -1,43 +1,57 @@
 package ru.itmo.sd.nebash
 
-interface Env {
-    operator fun get(name: VarName): VarValue?
-    val exported: Map<VarName, VarValue>
+/**
+ * Represents environments that contain variables.
+ * Some variables are *exported*: available in child processes.
+ */
+interface Env : Map<VarName, VarValue> {
+
+    /**
+     * Subset of variables that are exported.
+     */
+    val exported: Env
 }
 
-interface MutableEnv : Env {
-    operator fun set(name: VarName, value: VarValue)
+/**
+ * Represents mutable [Env].
+ */
+interface MutableEnv : Env, MutableMap<VarName, VarValue> {
     fun export(name: VarName)
 }
 
-class MutableEnvImpl(private val parent: Env? = null) : MutableEnv {
-
+private class MutableEnvImpl(
+    private val parent: Env? = null,
     private val map: MutableMap<VarName, VarValue> = mutableMapOf()
-    private val exportedSet: MutableSet<VarName> = mutableSetOf()
+) : MutableEnv, MutableMap<VarName, VarValue> by map {
 
-    override fun set(name: VarName, value: VarValue) {
-        map[name] = value;
-    }
+    private val exportedSet: MutableSet<VarName> = mutableSetOf()
 
     override fun export(name: VarName) {
         exportedSet += name;
     }
 
-    override fun get(name: VarName): VarValue? = map[name] ?: parent?.get(name)
+    override fun get(key: VarName): VarValue? = map[key] ?: parent?.get(key)
 
-    override val exported: Map<VarName, VarValue>
+    override val exported: Env
         get() {
-            val exportedMap = map.filterKeys { it in exportedSet }
-            return parent?.exported.orEmpty() + exportedMap
+            val exported = map.filterKeys { it in exportedSet }
+            val joined = parent?.exported.orEmpty() + exported
+            return MutableEnvImpl(map = joined.toMutableMap())
         }
 }
 
+/**
+ * [Env] builder function.
+ */
+fun Env(parent: Env? = null): Env = MutableEnv(parent)
+
+/**
+ * [MutableEnv] builder function.
+ */
+fun MutableEnv(parent: Env? = null): MutableEnv = MutableEnvImpl(parent)
+
 @JvmInline
-value class VarName(val name: String) {
-    init {
-        require(name.isNotBlank())
-    }
-}
+value class VarName(val name: String)
 
 val String.vn: VarName
     get() = VarName(this)

@@ -2,6 +2,7 @@ package ru.itmo.sd.nebash
 
 import ru.itmo.sd.nebash.frontend.raw.RawStmt
 import ru.itmo.sd.nebash.frontend.raw.RawStmtBuilder
+import ru.itmo.sd.nebash.frontend.raw.isExit
 
 private fun main() {
     val interpreter = Nebash()
@@ -12,9 +13,13 @@ private fun main() {
                 is ReadStmt.Empty -> continue
                 is ReadStmt.End -> break
             }
+            if (stmt.isExit) {
+                println("exit")
+                return
+            }
             interpreter.execute(stmt)
-        } catch (e: RuntimeException) {
-            // TODO
+        } catch (e: NebashException) {
+            println("Error: ${e.message}")
         }
     }
 }

@@ -30,6 +30,10 @@ application {
     mainClass.set("ru.itmo.sd.nebash.MainKt")
 }
 
+tasks.withType<JavaExec>().all {
+    standardInput = System.`in`
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
     testLogging {
