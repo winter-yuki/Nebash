@@ -12,4 +12,4 @@ private val commands = mapOf(
 )
 
 fun commandByName(name: CommandName): Command =
-    commands[name] ?: External
+    commands[name] ?: External(name)
