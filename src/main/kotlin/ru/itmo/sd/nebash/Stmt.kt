@@ -21,12 +21,12 @@ sealed interface Stmt {
  * @param export Assignments can be exported and be available inside external process.
  * @param assignments List of assignments.
  */
-data class Assignments(
-    val export: Boolean,
+data class AssignmentStmt(
+    val export: Boolean = false,
     val assignments: List<Assignment>,
-    override val stdin: Filename?,
-    override val stdout: Filename?,
-    override val stderr: Filename?
+    override val stdin: Filename? = null,
+    override val stdout: Filename? = null,
+    override val stderr: Filename? = null
 ) : Stmt {
     init {
         require(assignments.isNotEmpty())
@@ -38,12 +38,12 @@ data class Assignments(
  * @param localAssignments List of local variables that are available in the command processes.
  * @param pipeline List of atoms -- commands itself with their arguments.
  */
-data class Pipeline(
-    val localAssignments: List<Assignment>,
+data class PipelineStmt(
+    val localAssignments: List<Assignment> = listOf(),
     val pipeline: List<PipelineAtom>,
-    override val stdin: Filename?,
-    override val stdout: Filename?,
-    override val stderr: Filename?
+    override val stdin: Filename? = null,
+    override val stdout: Filename? = null,
+    override val stderr: Filename? = null
 ) : Stmt {
     init {
         require(pipeline.isNotEmpty())
@@ -63,5 +63,5 @@ data class Assignment(
  */
 data class PipelineAtom(
     val name: CommandName,
-    val args: List<CommandArg>
+    val args: List<CommandArg> = listOf()
 )

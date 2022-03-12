@@ -19,8 +19,8 @@ fun Stmt.execute(state: MutableState) {
     val stderr = if (stderr == null) BufferedWriter(System.err.writer()) else TODO("Open stderr file")
     try {
         when (this) {
-            is Assignments -> eval(state)
-            is Pipeline -> eval(state, stdin, stdout, stderr)
+            is AssignmentStmt -> eval(state)
+            is PipelineStmt -> eval(state, stdin, stdout, stderr)
         }
     } finally {
         stdout.flush()
@@ -28,14 +28,14 @@ fun Stmt.execute(state: MutableState) {
     }
 }
 
-private fun Assignments.eval(state: MutableState) {
+private fun AssignmentStmt.eval(state: MutableState) {
     assignments.forEach { (name, value) ->
         state[name] = value
         if (export) state.export(name)
     }
 }
 
-private fun Pipeline.eval(
+private fun PipelineStmt.eval(
     state: State, stdin: BufferedReader, stdout: BufferedWriter, stderr: BufferedWriter
 ): Unit = runBlocking {
     val newState = MutableState(state).apply {

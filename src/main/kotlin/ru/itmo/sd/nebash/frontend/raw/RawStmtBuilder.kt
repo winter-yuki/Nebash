@@ -1,7 +1,5 @@
 package ru.itmo.sd.nebash.frontend.raw
 
-import ru.itmo.sd.nebash.utils.indexOfLastOrNull
-
 /**
  * Builds Nebash command line by line.
  */
@@ -11,12 +9,17 @@ class RawStmtBuilder {
     private var mark: NextPartMark? = null
 
     /**
-     * Append statement part.
+     * Append statement line.
      */
-    fun append(stmtPart: String) {
-        builder.append(stmtPart)
-        updateMark(stmtPart)
+    fun append(stmtLine: String) {
+        updateMark(stmtLine)
+        builder.append(
+            if (mark != NextPartMark.Backslash) stmtLine
+            else stmtLine.dropLast(2) // Remove \\\n
+        )
     }
+
+    fun isEmpty(): Boolean = builder.isEmpty()
 
     /**
      * Build statement if it is complete.
@@ -25,45 +28,29 @@ class RawStmtBuilder {
         if (mark != null) null
         else RawStmt(builder.toString())
 
-    fun isEmpty(): Boolean = builder.isEmpty()
-
     private fun updateMark(stmt: String) {
-        val singleQuote = stmt.indexOfLastOrNull { it == NextPartMark.SingleQuote.symbol }
-        val quote = stmt.indexOfLastOrNull { it == NextPartMark.Quote.symbol }
-        val backslash = stmt.endsWith(NextPartMark.Backslash.symbol)
-        updateMark(singleQuote, quote, backslash)
-    }
-
-    private fun updateMark(singleQuote: Int?, quote: Int?, backslash: Boolean) {
-        val mark = mark
-        if (mark == null) setMark(singleQuote, quote, backslash)
-        else updateMark(mark, singleQuote, quote, backslash)
-    }
-
-    private fun setMark(singleQuote: Int?, quote: Int?, backslash: Boolean) {
-        mark = when {
-            singleQuote == null && quote == null && !backslash -> null
-            singleQuote == null && quote == null && backslash -> NextPartMark.Backslash
-            singleQuote == null -> NextPartMark.Quote
-            quote == null -> NextPartMark.SingleQuote
-            else -> if (singleQuote < quote) NextPartMark.SingleQuote else NextPartMark.Quote
+        if (mark == NextPartMark.Backslash) {
+            mark = null
         }
-    }
 
-    private fun updateMark(mark: NextPartMark, singleQuote: Int?, quote: Int?, backslash: Boolean) {
-        when (mark) {
-            NextPartMark.SingleQuote -> singleQuote?.let {
-                setMark(singleQuote.truncate(it), quote.truncate(it), backslash)
+        val marks = stmt.mapNotNull {
+            when (it) {
+                NextPartMark.SingleQuote.symbol -> NextPartMark.SingleQuote
+                NextPartMark.Quote.symbol -> NextPartMark.Quote
+                else -> null
             }
-            NextPartMark.Quote -> quote?.let {
-                setMark(singleQuote.truncate(it), quote.truncate(it), backslash)
-            }
-            NextPartMark.Backslash -> setMark(singleQuote, quote, backslash)
         }
-    }
+        marks.forEach { nextMark ->
+            mark = when (mark) {
+                null -> nextMark
+                nextMark -> null
+                else -> mark
+            }
+        }
 
-    private fun Int?.truncate(lowerBound: Int): Int? = if (this == null) null else {
-        if (this <= lowerBound) null else this
+        if (mark == null && stmt.endsWith(NextPartMark.Backslash.symbol + "\n")) {
+            mark = NextPartMark.Backslash
+        }
     }
 }
 
