@@ -6,18 +6,17 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.itmo.sd.nebash.Env
-import ru.itmo.sd.nebash.backend.Command
-import ru.itmo.sd.nebash.backend.CommandArg
-import ru.itmo.sd.nebash.backend.CommandName
+import ru.itmo.sd.nebash.backend.*
 
+/**
+ * Run external process with specified name.
+ */
 class External(private val name: CommandName) : Command {
-    override fun invoke(
-        env: Env, args: List<CommandArg>,
-        stdin: Flow<String?>, stderr: MutableSharedFlow<String>
-    ): Flow<String> = flow {
+    override fun invoke(env: Env, args: List<CommandArg>, stdin: Stdin, stderr: Stderr): Stdout = flow {
+        // TODO catch and wrap exceptions
         val builder = ProcessBuilder(name.name, *args.map { it.arg }.toTypedArray()).apply {
             val e = environment()
-            env.exported.forEach { (name, value) ->
+            env.forEach { (name, value) ->
                 e[name.name] = value.value
             }
         }

@@ -4,8 +4,11 @@ import ru.itmo.sd.nebash.backend.execute
 import ru.itmo.sd.nebash.frontend.raw.RawStmt
 import ru.itmo.sd.nebash.frontend.toStmt
 
-class Nebash(private val env: MutableEnv = MutableEnv()) {
-    fun execute(stmt: RawStmt) = stmt.toStmt(env).execute(env)
+/**
+ * Represents Nebash interpreter.
+ */
+class Nebash(private val state: MutableState = MutableState()) {
+    fun execute(stmt: RawStmt) = stmt.toStmt(state).execute(state)
 }
 
 /**

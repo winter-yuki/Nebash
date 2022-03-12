@@ -11,5 +11,8 @@ private val commands = mapOf(
     "wc".cn to Wc
 )
 
+/**
+ * Provides command by its name.
+ */
 fun commandByName(name: CommandName): Command =
     commands[name] ?: External(name)

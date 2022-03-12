@@ -13,14 +13,14 @@ import java.io.BufferedWriter
 /**
  * Execute Nebash [Stmt].
  */
-fun Stmt.execute(env: MutableEnv) {
+fun Stmt.execute(state: MutableState) {
     val stdin = if (stdin == null) BufferedReader(System.`in`.reader()) else TODO("Open stdin file")
     val stdout = if (stdout == null) BufferedWriter(System.out.writer()) else TODO("Open stdout file")
     val stderr = if (stderr == null) BufferedWriter(System.err.writer()) else TODO("Open stderr file")
     try {
         when (this) {
-            is Assignments -> eval(env)
-            is Pipeline -> eval(env, stdin, stdout, stderr)
+            is Assignments -> eval(state)
+            is Pipeline -> eval(state, stdin, stdout, stderr)
         }
     } finally {
         stdout.flush()
@@ -28,38 +28,48 @@ fun Stmt.execute(env: MutableEnv) {
     }
 }
 
-private fun Assignments.eval(env: MutableEnv) {
-    list.forEach { (name, value) ->
-        env[name] = value
-        if (export) env.export(name)
+private fun Assignments.eval(state: MutableState) {
+    assignments.forEach { (name, value) ->
+        state[name] = value
+        if (export) state.export(name)
     }
 }
 
 private fun Pipeline.eval(
-    env: Env, stdin: BufferedReader, stdout: BufferedWriter, stderr: BufferedWriter
+    state: State, stdin: BufferedReader, stdout: BufferedWriter, stderr: BufferedWriter
 ): Unit = runBlocking {
-    val newEnv = MutableEnv(env).apply {
+    val newState = MutableState(state).apply {
         localAssignments.forEach { (name, value) ->
             set(name, value)
             export(name)
         }
     }
-    val stdinFlow: Flow<String?> = flow {
+    val stdinFlow: Stdin = flow {
         while (true) {
             val input = stdin.readLine() ?: break
-            if (input == "end") break
+            val eof = "end"
+            if (input == eof) {
+                emit(input + '\n')
+                break
+            }
+            if (input.endsWith(eof)) {
+                emit(input.dropLast(eof.length))
+                break
+            }
             emit(input + '\n')
         }
         emit(null)
     }.flowOn(Dispatchers.IO)
     val stderrFlow = MutableSharedFlow<String>()
     launch {
-        launch { stderrFlow.map { stderr.write(it); stderr.flush() }.flowOn(Dispatchers.IO).collect() }
+        launch {
+            stderrFlow.map { stderr.write(it); stderr.flush() /* TODO remove */ }.flowOn(Dispatchers.IO).collect()
+        }
         pipeline.fold(stdinFlow) { inFlow, (name, args) ->
-            commandByName(name)(newEnv, args, inFlow, stderrFlow).flowOn(Dispatchers.Default)
+            commandByName(name)(newState.env, args, inFlow, stderrFlow).flowOn(Dispatchers.Default)
         }.takeWhile { it != null }.map {
             require(it != null)
-            stdout.write(it); stdout.flush()
+            stdout.write(it); stdout.flush() // TODO remove
         }.flowOn(Dispatchers.IO).collect()
         cancel()
     }
