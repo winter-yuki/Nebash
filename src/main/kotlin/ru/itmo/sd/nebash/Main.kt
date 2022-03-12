@@ -34,8 +34,8 @@ private fun readStmt(prompt: String = "$ ", continuePrompt: String = "> "): Read
     print(prompt)
     val builder = RawStmtBuilder()
     while (true) {
-        val line = readlnOrNull() ?: return ReadStmt.End
-        if (line.isBlank()) return ReadStmt.Empty
+        val line = readlnOrNull()?.plus('\n') ?: return ReadStmt.End
+        if (line.isBlank() && builder.isEmpty()) return ReadStmt.Empty
         builder.append(line)
         val stmt = builder.buildOrNull()
         if (stmt == null) {

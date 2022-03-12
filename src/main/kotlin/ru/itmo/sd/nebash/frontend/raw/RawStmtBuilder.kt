@@ -25,10 +25,12 @@ class RawStmtBuilder {
         if (mark != null) null
         else RawStmt(builder.toString())
 
+    fun isEmpty(): Boolean = builder.isEmpty()
+
     private fun updateMark(stmt: String) {
         val singleQuote = stmt.indexOfLastOrNull { it == NextPartMark.SingleQuote.symbol }
         val quote = stmt.indexOfLastOrNull { it == NextPartMark.Quote.symbol }
-        val backslash = stmt.endsWith("\\")
+        val backslash = stmt.endsWith(NextPartMark.Backslash.symbol)
         updateMark(singleQuote, quote, backslash)
     }
 
@@ -36,6 +38,16 @@ class RawStmtBuilder {
         val mark = mark
         if (mark == null) setMark(singleQuote, quote, backslash)
         else updateMark(mark, singleQuote, quote, backslash)
+    }
+
+    private fun setMark(singleQuote: Int?, quote: Int?, backslash: Boolean) {
+        mark = when {
+            singleQuote == null && quote == null && !backslash -> null
+            singleQuote == null && quote == null && backslash -> NextPartMark.Backslash
+            singleQuote == null -> NextPartMark.Quote
+            quote == null -> NextPartMark.SingleQuote
+            else -> if (singleQuote < quote) NextPartMark.SingleQuote else NextPartMark.Quote
+        }
     }
 
     private fun updateMark(mark: NextPartMark, singleQuote: Int?, quote: Int?, backslash: Boolean) {
@@ -47,16 +59,6 @@ class RawStmtBuilder {
                 setMark(singleQuote.truncate(it), quote.truncate(it), backslash)
             }
             NextPartMark.Backslash -> setMark(singleQuote, quote, backslash)
-        }
-    }
-
-    private fun setMark(singleQuote: Int?, quote: Int?, backslash: Boolean) {
-        mark = when {
-            singleQuote == null && quote == null && !backslash -> null
-            singleQuote == null && quote == null && backslash -> NextPartMark.Backslash
-            singleQuote == null -> NextPartMark.Quote
-            quote == null -> NextPartMark.SingleQuote
-            else -> if (singleQuote < quote) NextPartMark.SingleQuote else NextPartMark.Quote
         }
     }
 
