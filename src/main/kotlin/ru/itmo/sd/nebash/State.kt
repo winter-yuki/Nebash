@@ -59,13 +59,19 @@ fun State(parent: State? = null): State = MutableState(parent)
 fun MutableState(parent: State? = null): MutableState = MutableStateImpl(parent)
 
 @JvmInline
-value class VarName(val name: String)
+value class VarName(val name: String) {
+    init {
+        require(name.isNotBlank())
+    }
+}
 
 val String.vn: VarName
     get() = VarName(this)
 
 @JvmInline
-value class VarValue(val value: String)
+value class VarValue(val value: String) {
+    override fun toString(): String = value
+}
 
 val String.vv: VarValue
     get() = VarValue(this)
