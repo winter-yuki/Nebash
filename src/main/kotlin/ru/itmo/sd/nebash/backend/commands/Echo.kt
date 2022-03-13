@@ -9,6 +9,6 @@ import ru.itmo.sd.nebash.backend.*
  */
 object Echo : Command {
     override fun invoke(env: Env, args: List<CommandArg>, stdin: Stdin, stderr: Stderr): Stdout = flow {
-        emit(args.joinToString(" ") { it.arg })
+        emit(args.joinToString(" ", postfix = "\n") { it.arg })
     }
 }

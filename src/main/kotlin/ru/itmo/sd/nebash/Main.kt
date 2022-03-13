@@ -1,5 +1,7 @@
 package ru.itmo.sd.nebash
 
+import ru.itmo.sd.nebash.backend.BackendException
+import ru.itmo.sd.nebash.frontend.FrontendException
 import ru.itmo.sd.nebash.frontend.raw.RawStmt
 import ru.itmo.sd.nebash.frontend.raw.RawStmtBuilder
 import ru.itmo.sd.nebash.frontend.raw.isExit
@@ -18,8 +20,13 @@ private fun main() {
                 return
             }
             interpreter.execute(stmt)
-        } catch (e: NebashException) {
-            println("Error: ${e.message}")
+        } catch (e: FrontendException) {
+            println("Nebash parse error: ${e.message}")
+        } catch (e: BackendException) {
+            println("Nebash execution error: ${e.message}")
+        } catch (e: Exception) {
+            println("Internal error: $e")
+            e.printStackTrace()
         }
     }
 }
