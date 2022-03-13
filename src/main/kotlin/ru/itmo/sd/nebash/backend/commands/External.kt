@@ -12,8 +12,7 @@ import ru.itmo.sd.nebash.backend.*
  * Run external process with specified name.
  */
 class External(private val name: CommandName) : Command {
-    override fun invoke(env: Env, args: List<CommandArg>, stdin: Stdin, stderr: Stderr): Stdout = flow {
-        // TODO catch and wrap exceptions
+    override fun invoke(env: Env, args: List<CommandArg>, stdin: Stdin, stderr: Stderr): Stdout = channelFlow {
         val builder = ProcessBuilder(name.name).apply {
             val e = environment()
             env.forEach { (name, value) ->
@@ -22,7 +21,11 @@ class External(private val name: CommandName) : Command {
             command().addAll(args.map { it.arg })
         }
         val process = withContext(Dispatchers.IO) {
-            builder.start()
+            try {
+                builder.start()
+            } catch (e: RuntimeException) {
+                throw FailToStartExternalProcess(e)
+            }
         }
         coroutineScope {
             launch(Dispatchers.IO) {
@@ -44,7 +47,7 @@ class External(private val name: CommandName) : Command {
             val inp = process.inputStream.bufferedReader()
             while (true) {
                 val line = inp.readLine() ?: break
-                emit(line + '\n')
+                send(line + '\n')
             }
         }
     }

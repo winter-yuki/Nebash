@@ -14,4 +14,4 @@ class Nebash(private val state: MutableState = MutableState()) {
 /**
  * Base class for all [Nebash] exceptions.
  */
-abstract class NebashException(message: String) : RuntimeException(message)
+abstract class NebashException(message: String, e: Throwable? = null) : RuntimeException(message, e)

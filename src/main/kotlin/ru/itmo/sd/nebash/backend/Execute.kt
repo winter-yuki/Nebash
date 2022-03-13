@@ -9,6 +9,7 @@ import ru.itmo.sd.nebash.*
 import ru.itmo.sd.nebash.backend.commands.commandByName
 import java.io.BufferedReader
 import java.io.BufferedWriter
+import java.io.IOException
 
 /**
  * Execute Nebash [Stmt].
@@ -22,6 +23,8 @@ fun Stmt.execute(state: MutableState) {
             is AssignmentStmt -> eval(state)
             is PipelineStmt -> eval(state, stdin, stdout, stderr)
         }
+    } catch (e: IOException) {
+        throw IOExecutionException(e)
     } finally {
         stdout.flush()
         stderr.flush()
