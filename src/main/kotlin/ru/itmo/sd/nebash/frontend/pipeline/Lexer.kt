@@ -1,5 +1,6 @@
 package ru.itmo.sd.nebash.frontend.pipeline
 
+import ru.itmo.sd.nebash.frontend.ClosingQuoteExpected
 import ru.itmo.sd.nebash.utils.unreachable
 
 fun String.tokenize(): List<Token> {

@@ -4,6 +4,7 @@ import ru.itmo.sd.nebash.PipelineAtom
 import ru.itmo.sd.nebash.State
 import ru.itmo.sd.nebash.backend.ca
 import ru.itmo.sd.nebash.backend.cn
+import ru.itmo.sd.nebash.frontend.EmptyPipelineAtomException
 import ru.itmo.sd.nebash.utils.split
 
 fun String.parsePipeline(state: State): List<PipelineAtom> {
