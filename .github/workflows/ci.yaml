@@ -1,6 +1,30 @@
-name: CI
+name: Nebash CI
 
-on: pull_request
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
+        with:
+          arguments: |
+            build
+            jacocoTestReport
+      - uses: codecov/codecov-action@v2
+        with:
+          flags: unittests
+          files: ./build/reports/jacoco/report.xml
+          name: codecov-umbrella
+          verbose: true

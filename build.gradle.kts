@@ -5,6 +5,7 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.19.0"
     id("org.jetbrains.dokka") version "1.6.10"
     application
+    jacoco
 }
 
 group = "ru.itmo.sd.nebash"
@@ -28,6 +29,17 @@ dependencies {
 
 application {
     mainClass.set("ru.itmo.sd.nebash.MainKt")
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(true)
+        xml.outputLocation.set(File("$buildDir/reports/jacoco/report.xml"))
+        html.required.set(false)
+        csv.required.set(false)
+    }
+    executionData(File("build/jacoco/test.exec"))
+    dependsOn("test")
 }
 
 tasks.withType<JavaExec>().all {
