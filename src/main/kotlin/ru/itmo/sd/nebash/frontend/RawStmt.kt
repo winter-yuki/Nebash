@@ -1,4 +1,4 @@
-package ru.itmo.sd.nebash.frontend.raw
+package ru.itmo.sd.nebash.frontend
 
 /**
  * Represents raw statement user enters.

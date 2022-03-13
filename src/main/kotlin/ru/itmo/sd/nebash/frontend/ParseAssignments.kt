@@ -1,7 +1,6 @@
 package ru.itmo.sd.nebash.frontend
 
 import ru.itmo.sd.nebash.*
-import ru.itmo.sd.nebash.frontend.raw.RawStmt
 
 /**
  * Assignment parse result.

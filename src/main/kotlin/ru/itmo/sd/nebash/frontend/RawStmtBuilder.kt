@@ -1,4 +1,4 @@
-package ru.itmo.sd.nebash.frontend.raw
+package ru.itmo.sd.nebash.frontend
 
 /**
  * Builds Nebash command line by line.
