@@ -20,3 +20,8 @@ naming:
   # Useful for exception classes and result data types
   MatchingDeclarationName:
     active: false
+
+exceptions:
+  TooGenericExceptionCaught:
+    excludes:
+      - "**/External.kt" # Rethrow external process exceptions
