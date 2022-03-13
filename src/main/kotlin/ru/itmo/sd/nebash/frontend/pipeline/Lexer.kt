@@ -59,7 +59,7 @@ private class TokensBuilder {
     }
 
     private fun flush(tokenBuilder: (String) -> Token) {
-        if (builder.isNotBlank()) {
+        if (builder.isNotEmpty()) {
             tokens += tokenBuilder(builder.toString())
             builder.clear()
         }

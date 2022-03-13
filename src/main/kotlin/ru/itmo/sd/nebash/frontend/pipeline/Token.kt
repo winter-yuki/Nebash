@@ -7,15 +7,15 @@ sealed interface Token {
     fun substitute(state: State): Token
 }
 
-class Part(val s: String) : Token {
+data class Part(val s: String) : Token {
     override fun substitute(state: State): Token = Part(s.substitute(state))
 }
 
-class SingleQuoted(val s: String) : Token {
+data class SingleQuoted(val s: String) : Token {
     override fun substitute(state: State): Token = this
 }
 
-class DoubleQuoted(val s: String) : Token {
+data class DoubleQuoted(val s: String) : Token {
     override fun substitute(state: State): Token = DoubleQuoted(s.substitute(state))
 }
 
