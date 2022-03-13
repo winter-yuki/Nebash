@@ -11,11 +11,11 @@ class RawStmtBuilder {
     /**
      * Append statement line.
      */
-    fun append(stmtLine: String) {
+    fun append(stmtLine: String): RawStmtBuilder = this.also {
         updateMark(stmtLine)
         builder.append(
             if (mark != NextPartMark.Backslash) stmtLine
-            else stmtLine.dropLast(2) // Remove \\\n
+            else stmtLine.dropLast(2) + '\n' // Remove \
         )
     }
 
