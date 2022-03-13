@@ -35,7 +35,7 @@ private class MutableStateImpl(
     private val exportedSet: MutableSet<VarName> = mutableSetOf()
 
     override fun export(name: VarName) {
-        exportedSet += name;
+        exportedSet += name
     }
 
     override fun get(key: VarName): VarValue? = map[key] ?: parent?.get(key)

@@ -4,6 +4,10 @@ import ru.itmo.sd.nebash.AssignmentStmt
 import ru.itmo.sd.nebash.PipelineStmt
 import ru.itmo.sd.nebash.State
 import ru.itmo.sd.nebash.Stmt
+import ru.itmo.sd.nebash.frontend.assignments.parseAssignments
+import ru.itmo.sd.nebash.frontend.pipeline.parsePipeline
+import ru.itmo.sd.nebash.frontend.raw.RawStmt
+import ru.itmo.sd.nebash.frontend.raw.rs
 
 /**
  * Parse raw statement.

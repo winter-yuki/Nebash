@@ -2,11 +2,11 @@ package ru.itmo.sd.nebash
 
 import ru.itmo.sd.nebash.backend.BackendException
 import ru.itmo.sd.nebash.frontend.FrontendException
-import ru.itmo.sd.nebash.frontend.RawStmt
-import ru.itmo.sd.nebash.frontend.RawStmtBuilder
-import ru.itmo.sd.nebash.frontend.isExit
+import ru.itmo.sd.nebash.frontend.raw.RawStmt
+import ru.itmo.sd.nebash.frontend.raw.RawStmtBuilder
+import ru.itmo.sd.nebash.frontend.raw.isExit
 
-private fun main() {
+fun main() {
     val interpreter = Nebash()
     while (true) {
         try {
@@ -24,9 +24,6 @@ private fun main() {
             println("Nebash parse error: ${e.message}")
         } catch (e: BackendException) {
             println("Nebash execution error: ${e.message}")
-        } catch (e: Exception) {
-            println("Internal error: $e")
-            e.printStackTrace()
         }
     }
 }

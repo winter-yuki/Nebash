@@ -36,7 +36,10 @@ private fun AssignmentStmt.eval(state: MutableState) {
 }
 
 private fun PipelineStmt.eval(
-    state: State, stdin: BufferedReader, stdout: BufferedWriter, stderr: BufferedWriter
+    state: State,
+    stdin: BufferedReader,
+    stdout: BufferedWriter,
+    stderr: BufferedWriter
 ): Unit = runBlocking {
     val newState = MutableState(state).apply {
         localAssignments.forEach { (name, value) ->

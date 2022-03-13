@@ -14,11 +14,12 @@ import ru.itmo.sd.nebash.backend.*
 class External(private val name: CommandName) : Command {
     override fun invoke(env: Env, args: List<CommandArg>, stdin: Stdin, stderr: Stderr): Stdout = flow {
         // TODO catch and wrap exceptions
-        val builder = ProcessBuilder(name.name, *args.map { it.arg }.toTypedArray()).apply {
+        val builder = ProcessBuilder(name.name).apply {
             val e = environment()
             env.forEach { (name, value) ->
                 e[name.name] = value.value
             }
+            command().addAll(args.map { it.arg })
         }
         val process = withContext(Dispatchers.IO) {
             builder.start()
@@ -40,9 +41,9 @@ class External(private val name: CommandName) : Command {
             }
         }
         withContext(Dispatchers.IO) {
-            val `in` = process.inputStream.bufferedReader()
+            val inp = process.inputStream.bufferedReader()
             while (true) {
-                val line = `in`.readLine() ?: break
+                val line = inp.readLine() ?: break
                 emit(line + '\n')
             }
         }
