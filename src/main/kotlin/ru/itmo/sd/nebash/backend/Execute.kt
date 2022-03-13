@@ -66,13 +66,13 @@ private fun PipelineStmt.eval(
     val stderrFlow = MutableSharedFlow<String>()
     launch {
         launch {
-            stderrFlow.map { stderr.write(it); stderr.flush() /* TODO remove */ }.flowOn(Dispatchers.IO).collect()
+            stderrFlow.map { stderr.write(it) }.flowOn(Dispatchers.IO).collect()
         }
         pipeline.fold(stdinFlow) { inFlow, (name, args) ->
             commandByName(name)(newState.env, args, inFlow, stderrFlow).flowOn(Dispatchers.Default)
         }.takeWhile { it != null }.map {
             require(it != null)
-            stdout.write(it); stdout.flush() // TODO remove
+            stdout.write(it)
         }.flowOn(Dispatchers.IO).collect()
         cancel()
     }
