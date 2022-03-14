@@ -22,14 +22,12 @@ object Wc : Command {
             nChars += length
         }
 
-        fun prettyPrint(filename: String? = null): String {
-            val res = "\t$nLines\t$nWords\t$nChars" +
-                    if (filename == null) "\n" else "\t$filename\n"
-            nWords = 0
-            nLines = 1
-            nChars = 0
-            return res
-        }
+        fun prettyPrint(filename: String? = null): String =
+            ("\t$nLines\t$nWords\t$nChars" + if (filename == null) "\n" else "\t$filename\n").also {
+                nWords = 0
+                nLines = 1
+                nChars = 0
+            }
 
         if (args.isEmpty()) {
             stdin.collectWhileNotNull { it.process() }
