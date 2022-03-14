@@ -29,17 +29,17 @@ class External(private val name: CommandName) : Command {
         }
         coroutineScope {
             launch(Dispatchers.IO) {
-                val err = process.errorStream.bufferedReader()
-                while (true) {
-                    val line = err.readLine() ?: break
-                    stderr.emit(line + '\n')
+                process.errorStream.bufferedReader().useLines {
+                    it.forEach { line ->
+                        stderr.emit(line + '\n')
+                    }
                 }
             }
             launch(Dispatchers.IO) {
-                val inp = process.inputStream.bufferedReader()
-                while (true) {
-                    val line = inp.readLine() ?: break
-                    send(line + '\n')
+                process.inputStream.bufferedReader().useLines {
+                    it.forEach { line ->
+                        send(line + '\n')
+                    }
                 }
             }
             launch {
