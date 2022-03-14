@@ -2,6 +2,7 @@ package ru.itmo.sd.nebash
 
 import ru.itmo.sd.nebash.backend.BackendException
 import ru.itmo.sd.nebash.frontend.FrontendException
+import ru.itmo.sd.nebash.frontend.raw.BuildResult
 import ru.itmo.sd.nebash.frontend.raw.RawStmt
 import ru.itmo.sd.nebash.frontend.raw.RawStmtBuilder
 import ru.itmo.sd.nebash.frontend.raw.isExit
@@ -39,13 +40,14 @@ private fun readStmt(prompt: String = "$ ", continuePrompt: String = "> "): Read
     val builder = RawStmtBuilder()
     while (true) {
         val line = readlnOrNull()?.plus('\n') ?: return ReadStmt.End
-        if (line.isBlank() && builder.isEmpty()) return ReadStmt.Empty
         builder.append(line)
-        val stmt = builder.buildOrNull()
-        if (stmt == null) {
-            print(continuePrompt)
-            continue
+        return when (val res = builder.build()) {
+            is BuildResult.Stmt -> ReadStmt.Ok(res.stmt)
+            is BuildResult.Empty -> ReadStmt.Empty
+            is BuildResult.NotFinished -> {
+                print(continuePrompt)
+                continue
+            }
         }
-        return ReadStmt.Ok(stmt)
     }
 }

@@ -19,14 +19,15 @@ class RawStmtBuilder {
         )
     }
 
-    fun isEmpty(): Boolean = builder.isEmpty()
-
     /**
      * Build statement if it is complete.
      */
-    fun buildOrNull(): RawStmt? =
-        if (mark != null) null
-        else RawStmt(builder.toString())
+    fun build(): BuildResult =
+        when {
+            mark != null -> BuildResult.NotFinished
+            builder.isBlank() -> BuildResult.Empty
+            else -> BuildResult.Stmt(builder.toString().rs)
+        }
 
     private fun updateMark(stmt: String) {
         if (mark == NextPartMark.Backslash) {
@@ -52,6 +53,12 @@ class RawStmtBuilder {
             mark = NextPartMark.Backslash
         }
     }
+}
+
+sealed interface BuildResult {
+    data class Stmt(val stmt: RawStmt) : BuildResult
+    object Empty : BuildResult
+    object NotFinished : BuildResult
 }
 
 /**
