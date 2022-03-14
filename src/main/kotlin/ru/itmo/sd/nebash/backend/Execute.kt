@@ -44,13 +44,8 @@ private fun PipelineStmt.eval(
     stdout: BufferedWriter,
     stderr: BufferedWriter
 ): Unit = runBlocking {
-    val newState = MutableState(state).apply {
-        localAssignments.forEach { (name, value) ->
-            set(name, value)
-            export(name)
-        }
-    }
-
+    val env = state.env + localAssignments.associate { (name, value) -> name to value }
+    val stderrFlow = MutableSharedFlow<String>()
     val stdinFlow: Stdin = flow {
         while (true) {
             val input = stdin.readLine() ?: break
@@ -65,15 +60,13 @@ private fun PipelineStmt.eval(
         emit(null)
     }.flowOn(Dispatchers.IO)
 
-    val stderrFlow = MutableSharedFlow<String>()
-
     launch {
         launch {
             stderrFlow.map { stderr.write(it) }.flowOn(Dispatchers.IO).collect()
         }
         val stdoutFlow = pipeline.fold(stdinFlow) { inFlow, (name, args) ->
             val cmd = commandByName(name)
-            val outFlow = cmd(newState.env, args, inFlow, stderrFlow)
+            val outFlow = cmd(env, args, inFlow, stderrFlow)
             outFlow.flowOn(Dispatchers.Default)
         }
         stdoutFlow.takeWhile { it != null }.map {

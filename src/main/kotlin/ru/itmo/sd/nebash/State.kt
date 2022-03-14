@@ -3,10 +3,9 @@ package ru.itmo.sd.nebash
 /**
  * Represents command execution environment.
  */
-class Env(map: Map<VarName, VarValue>) : Map<VarName, VarValue> by (System.getenv().bimap() + map)
+class Env(val map: Map<VarName, VarValue>) : Map<VarName, VarValue> by map
 
-private fun MutableMap<String, String>.bimap(): Map<VarName, VarValue> =
-    map { (name, value) -> name.vn to value.vv }.associate { it }
+operator fun Env.plus(other: Map<VarName, VarValue>) = Env(map + other)
 
 /**
  * Represents interpreter state that contain variables.
@@ -27,36 +26,36 @@ interface MutableState : State, MutableMap<VarName, VarValue> {
     fun export(name: VarName)
 }
 
-private class MutableStateImpl(
-    private val parent: State? = null,
-    private val map: MutableMap<VarName, VarValue> = mutableMapOf()
-) : MutableState, MutableMap<VarName, VarValue> by map {
+private class MutableStateImpl(private val map: MutableMap<VarName, VarValue> = mutableMapOf()) :
+    MutableState, MutableMap<VarName, VarValue> by map {
 
+    private val systemEnv = System.getenv()
+        .map { (name, value) -> name.vn to value.vv }
+        .associate { it }.toMutableMap()
     private val exportedSet: MutableSet<VarName> = mutableSetOf()
 
     override fun export(name: VarName) {
         exportedSet += name
     }
 
-    override fun get(key: VarName): VarValue? = map[key] ?: parent?.get(key)
+    override fun get(key: VarName): VarValue? = map[key] ?: systemEnv[key]
 
     override val env: Env
         get() {
             val exported = map.filterKeys { it in exportedSet }
-            val joined = parent?.env.orEmpty() + exported
-            return Env(joined)
+            return Env(systemEnv + exported)
         }
 }
 
 /**
  * [State] builder function.
  */
-fun State(parent: State? = null): State = MutableState(parent)
+fun State(): State = MutableStateImpl()
 
 /**
  * [MutableState] builder function.
  */
-fun MutableState(parent: State? = null): MutableState = MutableStateImpl(parent)
+fun MutableState(): MutableState = MutableStateImpl()
 
 /**
  * [MutableState] builder function.
