@@ -58,6 +58,19 @@ fun State(parent: State? = null): State = MutableState(parent)
  */
 fun MutableState(parent: State? = null): MutableState = MutableStateImpl(parent)
 
+/**
+ * [MutableState] builder function.
+ */
+fun MutableState(vararg map: Pair<VarName, VarValue>): MutableState =
+    MutableStateImpl(map = map.associate { it }.toMutableMap())
+
+/**
+ * [MutableState] builder function.
+ */
+@JvmName("RawMutableState")
+fun MutableState(vararg map: Pair<String, String>): MutableState =
+    MutableStateImpl(map = map.associate { (name, value) -> name.vn to value.vv }.toMutableMap())
+
 @JvmInline
 value class VarName(val name: String) {
     init {

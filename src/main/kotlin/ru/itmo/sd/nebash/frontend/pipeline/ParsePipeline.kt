@@ -8,6 +8,7 @@ import ru.itmo.sd.nebash.frontend.EmptyPipelineAtomException
 import ru.itmo.sd.nebash.utils.split
 
 fun String.parsePipeline(state: State): List<PipelineAtom> {
+    if (isBlank()) return listOf()
     val tokens = tokenize().map { it.substitute(state) }
     val atoms = tokens.split({ it is Pipe }) { token ->
         when (token) {

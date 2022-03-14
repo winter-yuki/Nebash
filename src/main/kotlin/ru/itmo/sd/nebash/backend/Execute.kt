@@ -66,14 +66,19 @@ private fun PipelineStmt.eval(
         }
         emit(null)
     }.flowOn(Dispatchers.IO)
+
     val stderrFlow = MutableSharedFlow<String>()
+
     launch {
         launch {
             stderrFlow.map { stderr.write(it) }.flowOn(Dispatchers.IO).collect()
         }
-        pipeline.fold(stdinFlow) { inFlow, (name, args) ->
-            commandByName(name)(newState.env, args, inFlow, stderrFlow).flowOn(Dispatchers.Default)
-        }.takeWhile { it != null }.map {
+        val stdoutFlow = pipeline.fold(stdinFlow) { inFlow, (name, args) ->
+            val cmd = commandByName(name)
+            val outFlow = cmd(newState.env, args, inFlow, stderrFlow)
+            outFlow.flowOn(Dispatchers.Default)
+        }
+        stdoutFlow.takeWhile { it != null }.map {
             require(it != null)
             stdout.write(it)
         }.flowOn(Dispatchers.IO).collect()
