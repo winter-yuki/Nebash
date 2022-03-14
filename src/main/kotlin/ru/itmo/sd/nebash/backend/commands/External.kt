@@ -12,7 +12,7 @@ import ru.itmo.sd.nebash.backend.*
  * Run external process with specified name.
  */
 class External(private val name: CommandName) : Command {
-    override fun invoke(env: Env, args: List<CommandArg>, stdin: Stdin, stderr: Stderr): Stdout = channelFlow {
+    override fun invoke(env: Env, args: List<CommandArg>, stdin: Stdin, stderr: Stderr): Stdout = channelFlow<String> {
         val builder = ProcessBuilder(name.name).apply {
             val e = environment()
             env.forEach { (name, value) ->
@@ -35,20 +35,22 @@ class External(private val name: CommandName) : Command {
                     stderr.emit(line + '\n')
                 }
             }
-            val out = process.outputStream.bufferedWriter()
+            launch(Dispatchers.IO) {
+                val inp = process.inputStream.bufferedReader()
+                while (true) {
+                    val line = inp.readLine() ?: break
+                    send(line + '\n')
+                }
+            }
             launch {
-                stdin
-                    .takeWhile { it != null }
-                    .map { require(it != null); out.write(it) }
-                    .flowOn(Dispatchers.IO).collect()
+                process.outputStream.bufferedWriter().use { out ->
+                    stdin
+                        .takeWhile { it != null }
+                        .map { require(it != null); out.write(it) }
+                        .flowOn(Dispatchers.IO).collect()
+                }
             }
         }
-        withContext(Dispatchers.IO) {
-            val inp = process.inputStream.bufferedReader()
-            while (true) {
-                val line = inp.readLine() ?: break
-                send(line + '\n')
-            }
-        }
-    }
+        process.waitFor()
+    }.flowOn(Dispatchers.IO)
 }

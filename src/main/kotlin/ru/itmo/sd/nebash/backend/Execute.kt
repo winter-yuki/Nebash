@@ -50,13 +50,14 @@ private fun PipelineStmt.eval(
             export(name)
         }
     }
+
     val stdinFlow: Stdin = flow {
         while (true) {
             val input = stdin.readLine() ?: break
             val eof = "end"
             if (input == eof) break
             if (input.endsWith(eof)) {
-                emit(input.drop(eof.length))
+                emit(input.dropLast(eof.length))
                 break
             }
             emit(input + '\n')
