@@ -13,7 +13,7 @@ import kotlin.io.path.forEachLine
 object Wc : Command {
     override fun invoke(env: Env, args: List<CommandArg>, stdin: Stdin, stderr: Stderr): Stdout = flow {
         var nWords = 0
-        var nLines = 0
+        var nLines = 1
         var nChars = 0
 
         fun String.process() {
@@ -26,7 +26,7 @@ object Wc : Command {
             val res = "\t$nLines\t$nWords\t$nChars" +
                     if (filename == null) "\n" else "\t$filename\n"
             nWords = 0
-            nLines = 0
+            nLines = 1
             nChars = 0
             return res
         }

@@ -15,7 +15,7 @@ object Cat : Command {
         if (args.isEmpty()) stdin.collectWhileNotNull { emit(it) }
         else args.forEach {
             Path(it.arg).forEachLine { line ->
-                emit(line)
+                emit(line + '\n')
             }
         }
     }
