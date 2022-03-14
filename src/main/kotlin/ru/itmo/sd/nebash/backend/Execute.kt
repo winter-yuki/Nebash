@@ -54,12 +54,9 @@ private fun PipelineStmt.eval(
         while (true) {
             val input = stdin.readLine() ?: break
             val eof = "end"
-            if (input == eof) {
-                emit(input + '\n')
-                break
-            }
+            if (input == eof) break
             if (input.endsWith(eof)) {
-                emit(input.dropLast(eof.length))
+                emit(input.drop(eof.length))
                 break
             }
             emit(input + '\n')
