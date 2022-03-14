@@ -51,6 +51,7 @@ class External(private val name: CommandName) : Command {
                 }
             }
         }
-        process.waitFor()
+        val exitCode = process.waitFor()
+        if (exitCode != 0) throw NonZeroExternalProcessExitCode(exitCode)
     }.flowOn(Dispatchers.IO)
 }
