@@ -5,31 +5,19 @@
 .Run app
 [source,bash]
 ----
-$ ./gradlew :run
+$ ./gradlew run --console=plain
 ----
 
-.Run tests
+.Build app and run checks and tests
 [source,bash]
 ----
-$ ./gradlew :test
+$ ./gradlew build
 ----
 
 .Generate docs
 [source,bash]
 ----
-$ ./gradlew :dokkaHtml
-----
-
-.Run static analysis
-[source,bash]
-----
-$ ./gradlew :detekt
-----
-
-.Check before commit
-[source,bash]
-----
-$ ./gradlew :check
+$ ./gradlew dokkaHtml
 ----
 
 == Repository organization
