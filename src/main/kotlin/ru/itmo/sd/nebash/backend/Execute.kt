@@ -9,15 +9,13 @@ import ru.itmo.sd.nebash.*
 import ru.itmo.sd.nebash.backend.commands.commandByName
 import java.io.BufferedReader
 import java.io.BufferedWriter
+import java.io.Closeable
 import java.io.IOException
 
 /**
  * Execute Nebash [Stmt].
  */
-fun Stmt.execute(state: MutableState) {
-    val stdin = if (stdin == null) BufferedReader(System.`in`.reader()) else TODO("Open stdin file")
-    val stdout = if (stdout == null) BufferedWriter(System.out.writer()) else TODO("Open stdout file")
-    val stderr = if (stderr == null) BufferedWriter(System.err.writer()) else TODO("Open stderr file")
+fun Stmt.execute(state: MutableState) = use { stdin, stdout, stderr ->
     try {
         when (this) {
             is AssignmentStmt -> eval(state)
@@ -75,4 +73,19 @@ private fun PipelineStmt.eval(
         }.flowOn(Dispatchers.IO).collect()
         cancel()
     }
+}
+
+private inline fun Stmt.use(block: (BufferedReader, BufferedWriter, BufferedWriter) -> Unit) {
+    (stdin?.bufferedReader() ?: BufferedReader(System.`in`.reader())).useIf(stdin != null) { stdin ->
+        (stdout?.bufferedWriter() ?: BufferedWriter(System.out.writer())).useIf(stdout != null) { stdout ->
+            (stderr?.bufferedWriter() ?: BufferedWriter(System.err.writer())).useIf(stderr != null) { stderr ->
+                block(stdin, stdout, stderr)
+            }
+        }
+    }
+}
+
+private inline fun <T : Closeable> T.useIf(cond: Boolean, block: (T) -> Unit) {
+    if (cond) use(block)
+    else block(this)
 }

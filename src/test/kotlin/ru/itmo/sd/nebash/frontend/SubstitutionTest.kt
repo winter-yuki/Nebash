@@ -6,7 +6,7 @@ import ru.itmo.sd.nebash.MutableState
 import ru.itmo.sd.nebash.vn
 import ru.itmo.sd.nebash.vv
 
-class UtilsTest {
+class SubstitutionTest {
 
     private val a = "1"
     private val _a = "1 2"
@@ -53,7 +53,7 @@ class UtilsTest {
 
     @Test
     fun `empty name`() {
-        assertEquals("$ $ $a\t$", "$ $ \$a\t$".substitute(state))
+        assertEquals("$  \t$ \t$a\t$", "$  \t$ \t\$a\t$".substitute(state))
     }
 
     @Test

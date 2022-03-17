@@ -5,7 +5,6 @@ import ru.itmo.sd.nebash.frontend.FrontendException
 import ru.itmo.sd.nebash.frontend.raw.BuildResult
 import ru.itmo.sd.nebash.frontend.raw.RawStmt
 import ru.itmo.sd.nebash.frontend.raw.RawStmtBuilder
-import ru.itmo.sd.nebash.frontend.raw.isExit
 
 fun main() {
     val interpreter = Nebash()
@@ -51,3 +50,6 @@ private fun readStmt(prompt: String = "$ ", continuePrompt: String = "> "): Read
         }
     }
 }
+
+private val RawStmt.isExit: Boolean
+    get() = stmt.trim() == "exit"

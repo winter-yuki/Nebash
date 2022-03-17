@@ -8,7 +8,7 @@ import ru.itmo.sd.nebash.frontend.toStmt
  * Represents Nebash interpreter.
  */
 class Nebash(private val state: MutableState = MutableState()) {
-    fun execute(stmt: RawStmt) = stmt.toStmt(state).execute(state)
+    fun execute(rawStmt: RawStmt) = rawStmt.toStmt(state).execute(state)
 }
 
 /**

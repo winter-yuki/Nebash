@@ -16,10 +16,13 @@ typealias Stderr = MutableSharedFlow<String>
 typealias Stdout = Flow<String>
 
 @JvmInline
-value class CommandName(val name: String)
+value class CommandName(val name: String) {
+    init {
+        require(name.isNotBlank())
+    }
+}
 
-val String.cn: CommandName
-    get() = CommandName(this)
+fun String.toCn() = CommandName(this)
 
 @JvmInline
 value class CommandArg(val arg: String)

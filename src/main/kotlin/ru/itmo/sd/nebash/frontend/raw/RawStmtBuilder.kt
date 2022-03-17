@@ -26,7 +26,7 @@ class RawStmtBuilder {
         when {
             mark != null -> BuildResult.NotFinished
             builder.isBlank() -> BuildResult.Empty
-            else -> BuildResult.Stmt(builder.toString().rs)
+            else -> BuildResult.Stmt(builder.toString().toRs())
         }
 
     private fun updateMark(stmt: String) {

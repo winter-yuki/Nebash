@@ -22,7 +22,7 @@ class RawStmtBuilderTest {
         val builder = RawStmtBuilder()
         val s = """echo 'hello word' "1 2""""
         builder.append(s)
-        assertEquals(BuildResult.Stmt(s.rs), builder.build())
+        assertEquals(BuildResult.Stmt(s.toRs()), builder.build())
     }
 
     @Test
@@ -36,7 +36,7 @@ class RawStmtBuilderTest {
         assertEquals(BuildResult.NotFinished, builder.build())
         val s3 = "end\'"
         builder.append(s3)
-        assertEquals(BuildResult.Stmt((s1 + s2 + s3).rs), builder.build())
+        assertEquals(BuildResult.Stmt((s1 + s2 + s3).toRs()), builder.build())
     }
 
     @Test
@@ -53,7 +53,7 @@ class RawStmtBuilderTest {
         assertEquals(BuildResult.NotFinished, builder.build())
         val s4 = "\'"
         builder.append(s4)
-        val expected = BuildResult.Stmt((s1 + s2 + s3 + s4).rs)
+        val expected = BuildResult.Stmt((s1 + s2 + s3 + s4).toRs())
         assertEquals(expected, builder.build())
     }
 
@@ -65,7 +65,7 @@ class RawStmtBuilderTest {
         assertEquals(BuildResult.NotFinished, builder.build())
         val s2 = "\"\'\"end"
         builder.append(s2)
-        val expected = BuildResult.Stmt((s1.dropLast(2) + '\n' + s2).rs)
+        val expected = BuildResult.Stmt((s1.dropLast(2) + '\n' + s2).toRs())
         assertEquals(expected, builder.build())
     }
 
@@ -77,7 +77,7 @@ class RawStmtBuilderTest {
         assertEquals(BuildResult.NotFinished, builder.build())
         val s2 = "\"\"\'1\\2\""
         builder.append(s2)
-        val expected = BuildResult.Stmt((s1 + s2).rs)
+        val expected = BuildResult.Stmt((s1 + s2).toRs())
         assertEquals(expected, builder.build())
     }
 }

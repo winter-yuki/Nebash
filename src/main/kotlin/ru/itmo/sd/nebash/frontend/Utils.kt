@@ -13,7 +13,7 @@ fun String.substitute(state: State): String = buildString {
     parts.asSequence().drop(1).forEach { part ->
         val split = part.split("""\s""".toRegex(), limit = 2)
         val name = split.first()
-        append(if (name.isEmpty()) "\$" else state[name.vn] ?: "")
+        append(if (name.isBlank()) "\$" else state[name.vn] ?: "")
         append(part.getOrNull(name.length) ?: "")
         append(split.getOrElse(1) { "" })
     }

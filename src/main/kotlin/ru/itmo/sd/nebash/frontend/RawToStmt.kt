@@ -7,13 +7,13 @@ import ru.itmo.sd.nebash.Stmt
 import ru.itmo.sd.nebash.frontend.assignments.parseAssignments
 import ru.itmo.sd.nebash.frontend.pipeline.parsePipeline
 import ru.itmo.sd.nebash.frontend.raw.RawStmt
-import ru.itmo.sd.nebash.frontend.raw.rs
+import ru.itmo.sd.nebash.frontend.raw.toRs
 
 /**
  * Parse raw statement.
  */
 fun RawStmt.toStmt(state: State): Stmt {
-    val (assignments, tail) = stmt.trim().rs.parseAssignments(state)
+    val (assignments, tail) = stmt.trim().toRs().parseAssignments(state)
     val pipeline = tail.parsePipeline(state)
     require(assignments.list.isNotEmpty() || pipeline.isNotEmpty()) { "Parsing error" }
     return if (assignments.export || pipeline.isEmpty()) {

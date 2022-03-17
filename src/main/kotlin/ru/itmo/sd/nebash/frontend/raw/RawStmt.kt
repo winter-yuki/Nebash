@@ -10,8 +10,4 @@ value class RawStmt(val stmt: String) {
     }
 }
 
-val String.rs: RawStmt
-    get() = RawStmt(this)
-
-val RawStmt.isExit: Boolean
-    get() = stmt.trim() == "exit"
+fun String.toRs() = RawStmt(this)
