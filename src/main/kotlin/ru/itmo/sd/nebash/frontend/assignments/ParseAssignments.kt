@@ -25,7 +25,7 @@ fun RawStmt.parseAssignments(state: State): Pair<RawAssignmentStmt, String> {
             ?: return RawAssignmentStmt(export, list) to tail
         val (_, newExport, name, value, newTail) = match.groupValues
         export = export || newExport.isNotEmpty()
-        list += Assignment(name.vn, value.parseValue(state))
+        list += Assignment(name.toVn(), value.parseValue(state))
         tail = newTail
     }
 }

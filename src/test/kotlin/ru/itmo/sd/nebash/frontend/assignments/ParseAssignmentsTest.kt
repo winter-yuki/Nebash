@@ -16,7 +16,7 @@ class ParseAssignmentsTest {
     @Test
     fun `one assignment`() {
         val expected = RawAssignmentStmt(
-            list = listOf(Assignment("a".vn, " 1 2".vv))
+            list = listOf(Assignment("a".toVn(), " 1 2".vv))
         )
         assertEquals(expected to "", " a=\' 1 2\'".toRs().parseAssignments(state))
     }
@@ -25,7 +25,7 @@ class ParseAssignmentsTest {
     fun export() {
         val expected = RawAssignmentStmt(
             export = true,
-            list = listOf(Assignment("_ab1".vn, "| 11 22 ".vv))
+            list = listOf(Assignment("_ab1".toVn(), "| 11 22 ".vv))
         )
         assertEquals(expected to "tail", " export  _ab1=\"| 11 22 \"\t tail".toRs().parseAssignments(state))
     }
@@ -35,9 +35,9 @@ class ParseAssignmentsTest {
         val expected = RawAssignmentStmt(
             export = true,
             list = listOf(
-                Assignment("_1".vn, "| |".vv),
-                Assignment("q".vn, "12".vv),
-                Assignment("qwerty".vn, " | | ".vv)
+                Assignment("_1".toVn(), "| |".vv),
+                Assignment("q".toVn(), "12".vv),
+                Assignment("qwerty".toVn(), " | | ".vv)
             )
         ) to "echo \'arg\' | wc"
         assertEquals(
@@ -51,9 +51,9 @@ class ParseAssignmentsTest {
         val expected = RawAssignmentStmt(
             export = true,
             list = listOf(
-                Assignment("_1".vn, "| |".vv),
-                Assignment("q".vn, "".vv),
-                Assignment("qwerty".vn, "".vv)
+                Assignment("_1".toVn(), "| |".vv),
+                Assignment("q".toVn(), "".vv),
+                Assignment("qwerty".toVn(), "".vv)
             )
         ) to "echo \'arg\' | wc"
         assertEquals(
@@ -67,9 +67,9 @@ class ParseAssignmentsTest {
         val expected = RawAssignmentStmt(
             export = true,
             list = listOf(
-                Assignment("_1".vn, "| \$a |".vv),
-                Assignment("q".vn, " qw ".vv),
-                Assignment("qwerty".vn, " $a".vv)
+                Assignment("_1".toVn(), "| \$a |".vv),
+                Assignment("q".toVn(), " qw ".vv),
+                Assignment("qwerty".toVn(), " $a".vv)
             )
         ) to "echo \'arg\' | wc"
         assertEquals(

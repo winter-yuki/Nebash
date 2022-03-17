@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.itmo.sd.nebash.Env
 import ru.itmo.sd.nebash.backend.*
+import java.io.IOException
 
 /**
  * Run external process with specified name.
@@ -23,7 +24,7 @@ class External(private val name: CommandName) : Command {
         val process = withContext(Dispatchers.IO) {
             try {
                 builder.start()
-            } catch (e: RuntimeException) {
+            } catch (e: IOException) {
                 throw FailToStartExternalProcess(e)
             }
         }

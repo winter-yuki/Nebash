@@ -2,7 +2,7 @@ package ru.itmo.sd.nebash
 
 import ru.itmo.sd.nebash.backend.CommandArg
 import ru.itmo.sd.nebash.backend.CommandName
-import ru.itmo.sd.nebash.utils.Filename
+import java.nio.file.Path
 
 /**
  * Represents [Nebash] statement.
@@ -11,9 +11,9 @@ import ru.itmo.sd.nebash.utils.Filename
  * @property stderr Standard error redirection, default if null.
  */
 sealed interface Stmt {
-    val stdin: Filename?
-    val stdout: Filename?
-    val stderr: Filename?
+    val stdin: Path?
+    val stdout: Path?
+    val stderr: Path?
 }
 
 /**
@@ -24,9 +24,9 @@ sealed interface Stmt {
 data class AssignmentStmt(
     val export: Boolean = false,
     val assignments: List<Assignment>,
-    override val stdin: Filename? = null,
-    override val stdout: Filename? = null,
-    override val stderr: Filename? = null
+    override val stdin: Path? = null,
+    override val stdout: Path? = null,
+    override val stderr: Path? = null
 ) : Stmt {
     init {
         require(assignments.isNotEmpty())
@@ -41,9 +41,9 @@ data class AssignmentStmt(
 data class PipelineStmt(
     val localAssignments: List<Assignment> = listOf(),
     val pipeline: List<PipelineAtom>,
-    override val stdin: Filename? = null,
-    override val stdout: Filename? = null,
-    override val stderr: Filename? = null
+    override val stdin: Path? = null,
+    override val stdout: Path? = null,
+    override val stderr: Path? = null
 ) : Stmt {
     init {
         require(pipeline.isNotEmpty())

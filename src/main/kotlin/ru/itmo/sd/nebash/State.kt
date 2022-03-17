@@ -30,7 +30,7 @@ private class MutableStateImpl(private val map: MutableMap<VarName, VarValue> = 
     MutableState, MutableMap<VarName, VarValue> by map {
 
     private val systemEnv = System.getenv()
-        .map { (name, value) -> name.vn to value.vv }
+        .map { (name, value) -> name.toVn() to value.vv }
         .associate { it }.toMutableMap()
     private val exportedSet: MutableSet<VarName> = mutableSetOf()
 
@@ -66,9 +66,9 @@ fun MutableState(vararg map: Pair<VarName, VarValue>): MutableState =
 /**
  * [MutableState] builder function.
  */
-@JvmName("RawMutableState")
+@JvmName("StringMutableState")
 fun MutableState(vararg map: Pair<String, String>): MutableState =
-    MutableStateImpl(map = map.associate { (name, value) -> name.vn to value.vv }.toMutableMap())
+    MutableStateImpl(map = map.associate { (name, value) -> name.toVn() to value.vv }.toMutableMap())
 
 @JvmInline
 value class VarName(val name: String) {
@@ -77,8 +77,7 @@ value class VarName(val name: String) {
     }
 }
 
-val String.vn: VarName
-    get() = VarName(this)
+fun String.toVn() = VarName(this)
 
 @JvmInline
 value class VarValue(val value: String) {

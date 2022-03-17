@@ -12,22 +12,24 @@ import kotlin.io.path.forEachLine
  */
 object Wc : Command {
     override fun invoke(env: Env, args: List<CommandArg>, stdin: Stdin, stderr: Stderr): Stdout = flow {
+        var nLines = 0
         var nWords = 0
-        var nLines = 1
         var nChars = 0
 
         fun String.process() {
-            nWords += split("""\s+""".toRegex()).size
             nLines += count { it == '\n' }
+            nWords += split("""\s+""".toRegex()).count { it.isNotBlank() }
             nChars += length
         }
 
-        fun prettyPrint(filename: String? = null): String =
-            ("\t$nLines\t$nWords\t$nChars" + if (filename == null) "\n" else "\t$filename\n").also {
-                nWords = 0
-                nLines = 1
-                nChars = 0
-            }
+        fun prettyPrint(filename: String? = null): String {
+            val line = "\t${if (nLines == 0) 1 else nLines}\t$nWords\t$nChars"
+            val end = if (filename == null) "\n" else "\t$filename\n"
+            nLines = 0
+            nWords = 0
+            nChars = 0
+            return line + end
+        }
 
         if (args.isEmpty()) {
             stdin.collectWhileNotNull { it.process() }

@@ -1,7 +1,7 @@
 package ru.itmo.sd.nebash.frontend
 
 import ru.itmo.sd.nebash.State
-import ru.itmo.sd.nebash.vn
+import ru.itmo.sd.nebash.toVn
 
 /**
  * Stupidly substitute values into dollar positions.
@@ -13,7 +13,7 @@ fun String.substitute(state: State): String = buildString {
     parts.asSequence().drop(1).forEach { part ->
         val split = part.split("""\s""".toRegex(), limit = 2)
         val name = split.first()
-        append(if (name.isBlank()) "\$" else state[name.vn] ?: "")
+        append(if (name.isBlank()) "\$" else state[name.toVn()] ?: "")
         append(part.getOrNull(name.length) ?: "")
         append(split.getOrElse(1) { "" })
     }

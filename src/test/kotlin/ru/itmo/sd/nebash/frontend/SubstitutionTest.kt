@@ -3,7 +3,7 @@ package ru.itmo.sd.nebash.frontend
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import ru.itmo.sd.nebash.MutableState
-import ru.itmo.sd.nebash.vn
+import ru.itmo.sd.nebash.toVn
 import ru.itmo.sd.nebash.vv
 
 class SubstitutionTest {
@@ -11,8 +11,8 @@ class SubstitutionTest {
     private val a = "1"
     private val _a = "1 2"
     private val state = MutableState().apply {
-        set("a".vn, a.vv)
-        set("_a".vn, _a.vv)
+        set("a".toVn(), a.vv)
+        set("_a".toVn(), _a.vv)
     }
 
     @Test

@@ -11,6 +11,8 @@ import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.Closeable
 import java.io.IOException
+import kotlin.io.path.bufferedReader
+import kotlin.io.path.bufferedWriter
 
 /**
  * Execute Nebash [Stmt].
