@@ -34,8 +34,8 @@ private val valueRegex = """[^\s'"]*|'[^']*?'|"[^"]*?"""".toRegex()
 private val assignmentRegex = """($nameRegex)=($valueRegex)""".toRegex()
 private val assignmentsRegex = """\s*(export\s+)*$assignmentRegex(?:$|\s+([\s\S]*))""".toRegex()
 
-private fun String.parseValue(state: State): VarValue {
-    if (startsWith('\'')) return substring(1, lastIndex).vv
-    val s = if (!startsWith('\"')) this else substring(1, lastIndex)
-    return s.substitute(state).vv
-}
+private fun String.parseValue(state: State): VarValue =
+    if (startsWith('\'')) substring(1, lastIndex).vv else {
+        val s = if (startsWith('\"')) substring(1, lastIndex) else this
+        s.substitute(state).vv
+    }
