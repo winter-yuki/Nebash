@@ -1,7 +1,6 @@
 package ru.itmo.sd.nebash.frontend.assignments
 
 import ru.itmo.sd.nebash.*
-import ru.itmo.sd.nebash.frontend.raw.RawStmt
 import ru.itmo.sd.nebash.frontend.substitute
 
 /**
@@ -16,10 +15,10 @@ data class RawAssignmentStmt(
  * Parse assignment list.
  * @return Parsing result and tail.
  */
-fun RawStmt.parseAssignments(state: State): Pair<RawAssignmentStmt, String> {
+fun String.parseAssignments(state: State): Pair<RawAssignmentStmt, String> {
     var export = false
     val list = mutableListOf<Assignment>()
-    var tail = stmt
+    var tail = this
     while (true) {
         val match = assignmentsRegex.matchEntire(tail)
             ?: return RawAssignmentStmt(export, list) to tail

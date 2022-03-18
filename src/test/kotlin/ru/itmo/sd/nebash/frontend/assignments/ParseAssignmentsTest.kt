@@ -3,7 +3,6 @@ package ru.itmo.sd.nebash.frontend.assignments
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import ru.itmo.sd.nebash.*
-import ru.itmo.sd.nebash.frontend.raw.toRs
 
 class ParseAssignmentsTest {
 
@@ -18,7 +17,7 @@ class ParseAssignmentsTest {
         val expected = RawAssignmentStmt(
             list = listOf(Assignment("a".toVn(), " 1 2".vv))
         )
-        assertEquals(expected to "", " a=\' 1 2\'".toRs().parseAssignments(state))
+        assertEquals(expected to "", " a=\' 1 2\'".parseAssignments(state))
     }
 
     @Test
@@ -27,7 +26,7 @@ class ParseAssignmentsTest {
             export = true,
             list = listOf(Assignment("_ab1".toVn(), "| 11 22 ".vv))
         )
-        assertEquals(expected to "tail", " export  _ab1=\"| 11 22 \"\t tail".toRs().parseAssignments(state))
+        assertEquals(expected to "tail", " export  _ab1=\"| 11 22 \"\t tail".parseAssignments(state))
     }
 
     @Test
@@ -42,7 +41,7 @@ class ParseAssignmentsTest {
         ) to "echo \'arg\' | wc"
         assertEquals(
             expected,
-            " \t_1=\'| |\' export q=12  qwerty=\" | | \" \t echo 'arg' | wc".toRs().parseAssignments(state)
+            " \t_1=\'| |\' export q=12  qwerty=\" | | \" \t echo 'arg' | wc".parseAssignments(state)
         )
     }
 
@@ -58,7 +57,7 @@ class ParseAssignmentsTest {
         ) to "echo \'arg\' | wc"
         assertEquals(
             expected,
-            " \t_1=\'| |\' export q=  qwerty=\"\" \t echo 'arg' | wc".toRs().parseAssignments(state)
+            " \t_1=\'| |\' export q=  qwerty=\"\" \t echo 'arg' | wc".parseAssignments(state)
         )
     }
 
@@ -74,7 +73,7 @@ class ParseAssignmentsTest {
         ) to "echo \'arg\' | wc"
         assertEquals(
             expected,
-            " \t_1=\'| \$a |\' export q=\$bb  qwerty=\"\$q \$a\" \t echo 'arg' | wc".toRs().parseAssignments(state)
+            " \t_1=\'| \$a |\' export q=\$bb  qwerty=\"\$q \$a\" \t echo 'arg' | wc".parseAssignments(state)
         )
     }
 }
