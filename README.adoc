@@ -22,7 +22,7 @@ $ ./gradlew dokkaHtml
 
 == Repository organization
 
-* *Nebash* represents interpreter that contains variables *state* and interprets input
-* *Stmt* is a parsed user's input that can be executed
-* *frontend* -- parsing module with the main function `RawStmt.toStmt(state: State): Stmt`
-* *runtime* -- execution module with the main function `Stmt.execute(state: MutableState)`
+* *Nebash* represents interpreter that contains variables *state* and interprets commands
+* *Stmt* is an AST of the command that can be executed
+* *frontend* -- parsing module: `fun RawStmt.toStmt(state: State): Stmt`
+* *runtime* -- execution module: `fun Stmt.execute(state: MutableState)`
