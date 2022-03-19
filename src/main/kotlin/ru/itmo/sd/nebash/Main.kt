@@ -1,10 +1,10 @@
 package ru.itmo.sd.nebash
 
-import ru.itmo.sd.nebash.backend.BackendException
 import ru.itmo.sd.nebash.frontend.FrontendException
 import ru.itmo.sd.nebash.frontend.raw.BuildResult
 import ru.itmo.sd.nebash.frontend.raw.RawStmt
 import ru.itmo.sd.nebash.frontend.raw.RawStmtBuilder
+import ru.itmo.sd.nebash.runtime.NebashRuntimeException
 
 fun main() {
     val interpreter = Nebash()
@@ -22,7 +22,7 @@ fun main() {
             interpreter.execute(stmt)
         } catch (e: FrontendException) {
             println("Nebash parse error: ${e.message}")
-        } catch (e: BackendException) {
+        } catch (e: NebashRuntimeException) {
             println("Nebash execution error: ${e.message}")
         }
     }

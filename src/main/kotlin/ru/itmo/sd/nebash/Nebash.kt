@@ -1,8 +1,8 @@
 package ru.itmo.sd.nebash
 
-import ru.itmo.sd.nebash.backend.execute
 import ru.itmo.sd.nebash.frontend.raw.RawStmt
 import ru.itmo.sd.nebash.frontend.toStmt
+import ru.itmo.sd.nebash.runtime.execute
 
 /**
  * Represents Nebash interpreter.

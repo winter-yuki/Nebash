@@ -1,8 +1,8 @@
-package ru.itmo.sd.nebash.backend.commands
+package ru.itmo.sd.nebash.runtime.commands
 
-import ru.itmo.sd.nebash.backend.Command
-import ru.itmo.sd.nebash.backend.CommandName
-import ru.itmo.sd.nebash.backend.toCn
+import ru.itmo.sd.nebash.runtime.Command
+import ru.itmo.sd.nebash.runtime.CommandName
+import ru.itmo.sd.nebash.runtime.toCn
 
 /**
  * Provides command by its name.

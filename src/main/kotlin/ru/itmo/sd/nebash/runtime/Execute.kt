@@ -1,4 +1,4 @@
-package ru.itmo.sd.nebash.backend
+package ru.itmo.sd.nebash.runtime
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import ru.itmo.sd.nebash.*
-import ru.itmo.sd.nebash.backend.commands.commandByName
+import ru.itmo.sd.nebash.runtime.commands.commandByName
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.Closeable

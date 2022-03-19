@@ -1,7 +1,7 @@
 package ru.itmo.sd.nebash
 
-import ru.itmo.sd.nebash.backend.CommandArg
-import ru.itmo.sd.nebash.backend.CommandName
+import ru.itmo.sd.nebash.runtime.CommandArg
+import ru.itmo.sd.nebash.runtime.CommandName
 import java.nio.file.Path
 
 /**

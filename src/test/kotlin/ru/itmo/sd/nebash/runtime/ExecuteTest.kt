@@ -1,4 +1,4 @@
-package ru.itmo.sd.nebash.backend
+package ru.itmo.sd.nebash.runtime
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

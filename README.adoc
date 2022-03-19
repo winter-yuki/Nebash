@@ -25,4 +25,4 @@ $ ./gradlew dokkaHtml
 * *Nebash* represents interpreter that contains variables *state* and interprets input
 * *Stmt* is a parsed user's input that can be executed
 * *frontend* -- parsing module with the main function `RawStmt.toStmt(state: State): Stmt`
-* *backend* -- execution module with the main function `Stmt.execute(state: MutableState)`
+* *runtime* -- execution module with the main function `Stmt.execute(state: MutableState)`

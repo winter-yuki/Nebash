@@ -1,8 +1,8 @@
-package ru.itmo.sd.nebash.backend.commands
+package ru.itmo.sd.nebash.runtime.commands
 
 import kotlinx.coroutines.flow.flow
 import ru.itmo.sd.nebash.Env
-import ru.itmo.sd.nebash.backend.*
+import ru.itmo.sd.nebash.runtime.*
 
 /**
  * Print working directory unix-like command.

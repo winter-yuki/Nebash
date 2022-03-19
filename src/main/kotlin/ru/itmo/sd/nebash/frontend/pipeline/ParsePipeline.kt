@@ -2,9 +2,9 @@ package ru.itmo.sd.nebash.frontend.pipeline
 
 import ru.itmo.sd.nebash.PipelineAtom
 import ru.itmo.sd.nebash.State
-import ru.itmo.sd.nebash.backend.ca
-import ru.itmo.sd.nebash.backend.toCn
 import ru.itmo.sd.nebash.frontend.EmptyPipelineAtomException
+import ru.itmo.sd.nebash.runtime.ca
+import ru.itmo.sd.nebash.runtime.toCn
 import ru.itmo.sd.nebash.utils.split
 
 fun String.parsePipeline(state: State): List<PipelineAtom> {
