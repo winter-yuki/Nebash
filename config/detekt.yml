@@ -12,8 +12,17 @@ style:
   ReturnCount:
     excludes:
       - "**/Main.kt" # Complex UI
+  MagicNumber:
+    excludes:
+      - "**/Main.kt" # Error codes
+      - "**/test/**" # Tests
 
 naming:
   # Useful for exception classes and result data types
   MatchingDeclarationName:
     active: false
+
+exceptions:
+  TooGenericExceptionCaught:
+    excludes:
+      - "**/Main.kt"

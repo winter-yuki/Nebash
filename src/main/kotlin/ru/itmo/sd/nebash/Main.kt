@@ -5,6 +5,7 @@ import ru.itmo.sd.nebash.frontend.raw.BuildResult
 import ru.itmo.sd.nebash.frontend.raw.RawStmt
 import ru.itmo.sd.nebash.frontend.raw.RawStmtBuilder
 import ru.itmo.sd.nebash.runtime.NebashRuntimeException
+import kotlin.system.exitProcess
 
 fun main() {
     val interpreter = Nebash()
@@ -24,6 +25,15 @@ fun main() {
             println("Nebash parse error: ${e.message}")
         } catch (e: NebashRuntimeException) {
             println("Nebash execution error: ${e.message}")
+        } catch (e: NebashException) {
+            println("Nebash error: ${e.message}")
+            exitProcess(1)
+        } catch (e: Exception) {
+            println("Nebash internal error: $e")
+            exitProcess(2)
+        } catch (e: Throwable) {
+            println("Nebash process internal error: $e")
+            exitProcess(3)
         }
     }
 }
