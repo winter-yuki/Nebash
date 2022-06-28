@@ -55,6 +55,11 @@ class ExecuteTest {
     @Test
     fun cat() {
         listOf(PipelineAtom("cat".toCn())).test(
+            stdin = "",
+            stdout = "",
+            transform = { it }
+        )
+        listOf(PipelineAtom("cat".toCn())).test(
             stdin = "text in cat",
             stdout = "text in cat\n",
             transform = { it }
@@ -98,6 +103,110 @@ class ExecuteTest {
             stdin = " \t\n\n",
             stdout = listOf(2, 0, 4),
             transform = ::parseWc
+        )
+    }
+
+    @Test
+    fun `grep empty input`() {
+        listOf(PipelineAtom("grep".toCn(), args = listOf("something".ca))).test(
+            stdin = "",
+            stdout = "",
+            transform = { it }
+        )
+    }
+
+    @Test
+    fun `grep no args`() {
+        listOf(PipelineAtom("grep".toCn(), args = listOf("a.*A".ca))).test(
+            stdin = """
+                |  abbA     
+                |aca 
+                |    line three
+                |
+                |   aA
+                |
+                |
+            """.trimMargin(),
+            stdout = """
+                |  abbA     
+                |   aA
+                |
+            """.trimMargin(),
+            transform = { it }
+        )
+    }
+
+    @Test
+    fun `grep help`() {
+        val atom = PipelineAtom("grep".toCn(), args = listOf("--help".ca))
+        PipelineStmt(pipeline = listOf(atom)).execute(MutableState())
+    }
+
+    @Test
+    fun `grep n lines after`() {
+        listOf(PipelineAtom("grep".toCn(), args = listOf("-A".ca, "2".ca, "a.*A".ca))).test(
+            stdin = """
+                |  abbA     
+                |aca 
+                |    line three
+                |
+                |space
+                |   aA
+                |
+                |
+            """.trimMargin(),
+            stdout = """
+                |  abbA     
+                |aca 
+                |    line three
+                |   aA
+                |
+                |
+            """.trimMargin(),
+            transform = { it }
+        )
+    }
+
+    @Test
+    fun `grep ignore case`() {
+        listOf(PipelineAtom("grep".toCn(), args = listOf("-i".ca, "a.*A".ca))).test(
+            stdin = """
+                |  abbA     
+                |aca 
+                |    line three
+                |
+                |   aA
+                |
+                |
+            """.trimMargin(),
+            stdout = """
+                |  abbA     
+                |aca 
+                |   aA
+                |
+            """.trimMargin(),
+            transform = { it }
+        )
+    }
+
+    @Test
+    fun `grep word`() {
+        listOf(PipelineAtom("grep".toCn(), args = listOf("-w".ca, "a.*A".ca))).test(
+            stdin = """
+                |  abbA     
+                |acAc 
+                |    line three
+                |
+                |aA
+                |
+                |
+            """.trimMargin(),
+            stdout = """
+                |  abbA     
+                |aA
+                |
+            """.trimMargin(),
+            transform = { it }
         )
     }
 
