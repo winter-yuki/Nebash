@@ -1,0 +1,28 @@
+formatting:
+  # Conflicts with IDEA formatting
+  NoWildcardImports:
+    active: false
+
+style:
+  # Conflicts with IDEA formatting
+  WildcardImport:
+    active: false
+  LoopWithTooManyJumpStatements:
+    active: false
+  ReturnCount:
+    excludes:
+      - "**/Main.kt" # Complex UI
+  MagicNumber:
+    excludes:
+      - "**/Main.kt" # Error codes
+      - "**/test/**" # Tests
+
+naming:
+  # Useful for exception classes and result data types
+  MatchingDeclarationName:
+    active: false
+
+exceptions:
+  TooGenericExceptionCaught:
+    excludes:
+      - "**/Main.kt"

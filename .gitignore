@@ -1,3 +1,5 @@
+**/*.vpp.bar*
+**/*.vpp.lck
 
 # Created by https://www.toptal.com/developers/gitignore/api/intellij,kotlin,gradle,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij,kotlin,gradle,linux
